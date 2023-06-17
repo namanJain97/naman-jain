@@ -30,7 +30,7 @@ def call_api_with_bearer_token(access_token, sso_token, where_conditions):
 
 access_token = "b0013b54-b771-43f7-b2e0-a86b51fd92aa"
 where_conditions = "subjectIdentifier.reconciliationRuleIdentifier='EmirPositionCredit'&reconciliationBusinessDateTime='2022-02-03T00:00:00.000Z'"
-sso_token = "swwDFTvqnmURD5oc3RIAp2scP5OVsUZGla9mACJId63vOIRQPq55x6NUcLfSZuRd+p6YRbz7CzZGgo3C0r3tSJM9fKLp85M8C7g3fgsXOv0/JmTA7SUpDrLx8Til/cDzhAnWINtLEOGLD1pHHPN1JlpJdxNIkzU+Jrb09mpUmbs=|0|ghosjdg|TNTR-User|20230616133257|18000|"
+sso_token = "Agzncnm3+yjtHus3MNFR+qWGKKwIoyWrCNKKhL92I5EFaYamTyii5kStzJOHAIFJDoL/qUoBbxX+TNJz7vnZr5GphBvERgQIPYn940d+mpPbOJH1/dix6QpBTs1KNs3pzs8uQM5puLYfwk7L3bR2eI6hMsDOJ9Vm2/DE+DF3Vzc=|0|jainnbr|TNTR-User|20230617105748|18000|"
 
 call_api_with_bearer_token(access_token, sso_token, where_conditions)
 

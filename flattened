@@ -1,0 +1,28 @@
+           0.id.key  0.id.version 0.id.databaseName      0.id.collectionName  \
+0  543c548d98bfd6fe             8              Tntr  TNTR-reconciliation-uat   
+
+   0.lifetime.from.value  0.lifetime.to.value  0.lifetime.callerSupplied  \
+0          1676965204086  9223372036854775807                      False   
+
+                        0.document.@class  \
+0  com.rbs.datafabric.domain.JsonDocument   
+
+                                 0.document.contents          1.id.key  ...  \
+0  {"subjectIdentifier": {"sourceSystemMatchingKe...  f124fa7084b3541a  ...   
+
+                              9729.document.contents       9730.id.key  \
+0  {"subjectIdentifier": {"sourceSystemMatchingKe...  5b6880f8119c6451   
+
+  9730.id.version  9730.id.databaseName   9730.id.collectionName  \
+0              16                  Tntr  TNTR-reconciliation-uat   
+
+   9730.lifetime.from.value 9730.lifetime.to.value  \
+0             1683805070105    9223372036854775807   
+
+  9730.lifetime.callerSupplied                    9730.document.@class  \
+0                        False  com.rbs.datafabric.domain.JsonDocument   
+
+                              9730.document.contents  
+0  {"subjectIdentifier": {"sourceSystemMatchingKe...  
+
+[1 rows x 87579 columns]

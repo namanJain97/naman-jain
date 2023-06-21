@@ -1,6 +1,7 @@
 import requests
 import json
 from urllib.parse import quote
+import pandas as pd
 
 def flatten_json(data, prefix=''):
     flattened_data = {}
@@ -57,7 +58,7 @@ def call_api_with_bearer_token(url, access_token, sso_token, request_body=None, 
             response = requests.get(f"{url}?{query_string}", headers=headers)
         else:
             print("Invalid API call. Please provide either request body or where conditions.")
-            return
+            return None
 
         response.raise_for_status()  # Raise an exception for any error status code
 
@@ -65,12 +66,13 @@ def call_api_with_bearer_token(url, access_token, sso_token, request_body=None, 
         flattened_data = flatten_json(json_data)
         json_response = build_json_response(flattened_data)
 
+        extracted_data = []
         for record in json_response.values():
             field_values = extract_field_values(record, field_names)
             if field_values:
-                for field, value in field_values.items():
-                    print(f"{field}: {value}")
-                print("---")
+                extracted_data.append(field_values)
+
+        return extracted_data
 
     except requests.exceptions.RequestException as e:
         print(f"Error occurred: {e}")
@@ -78,10 +80,11 @@ def call_api_with_bearer_token(url, access_token, sso_token, request_body=None, 
         print(f"Error decoding JSON response: {e}")
     except Exception as e:
         print(f"An error occurred: {e}")
+    
+    return None
 
 # First API - Using request body and pagination
 url1 = "http://lonrs14597.fm.rbsgrp.net:36124/ignite/trade/regulatory/mas/trade/query"
-
 request_body1 = {
     "select": "",
     "orderBy": None,
@@ -91,14 +94,23 @@ request_body1 = {
 }
 
 # Second API - Using where conditions
-url2 = "http://datafabric-tst:40003/datafabric/Tntr/TNTR-reconciliation-uat"
-where_conditions2 = "subjectIdentifier.reconciliationRuleIdentifier='EmirPositionCredit'&reconciliationBusinessDateTime='2022-02-03T00:00:00.000Z'"
+url2 = "http://datafabric-tst:40003/datafabric/Tntr-prodprl/TNTR-trade-prodprl"
+where_conditions2 = "subjectIdentifier.regulatoryRegimeIdentifier.regulatoryAuthority = 'The Monetary Authority of Singapore' and subjectIdentifier.sourceSystem = 'GlobalFX GBLO' and _df.lifetimeFrom >'2023-04-05T00:00:00.000Z'"
 field_names2 = []  # Add the field names you want to extract, or leave it empty for all fields
 
 access_token = "b0013b54-b771-43f7-b2e0-a86b51fd92aa"
-sso_token = "RFEMMrvt4Iz6/EGCT3dOYYGn4BTxHJH11vR5aV//rQc4TJaHZ4vrRkGQ2HMhpxFZ6b58iYB7J/Kt1IPQVFcaaHL+bh58vr9icBcNY6v2zqcrX/HxYxsmUdvKLNTvxSez+Ks5Uo3i+S3K+s/LAWbazDCe2PYEJ9n0fX286xSDu/Q=|0|jainnbr|TNTR-User|20230621151441|18000|"
+sso_token = "OBO4sgorgOxt0ozarIzA9nf63aU6n5fkhDDUtfW9euQl4r/+syzFBkMCsMK8aAKNlR0Jcw670dYS7H8vTWCpEIgsCIrLsBlzqjUWNKXnmxEP+kjzcZ/cKF/mxi/9G6d2sgVNMWbdezIlKbcG50jKxPT6yFZw+xaTxQfwvQB3x44=|0|jainnbr|TNTR-User|20230621193209|18000|"
 
-# Make API calls
-call_api_with_bearer_token(url1, access_token, sso_token, request_body=request_body1)
-call_api_with_bearer_token(url2, access_token, sso_token, where_conditions=where_conditions2, field_names=field_names2)
+# Make API calls and save data into DataFrames
+data1 = call_api_with_bearer_token(url1, access_token, sso_token, request_body=request_body1)
+df1 = pd.DataFrame(data1)
 
+data2 = call_api_with_bearer_token(url2, access_token, sso_token, where_conditions=where_conditions2, field_names=field_names2)
+df2 = pd.DataFrame(data2)
+
+# Display the DataFrames
+print("DataFrame 1:")
+print(df1)
+
+print("DataFrame 2:")
+print(df2)

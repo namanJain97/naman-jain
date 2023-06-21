@@ -1,0 +1,47 @@
+import requests
+
+url = "http://lonrs14597.fm.rbsgrp.net:36124/ignite/trade/regulatory/mas/trade/query"
+sso_token = "i/ciYtTLdj6idXh91JDZEZnA3Id4vaSu8bCrvhsCoeNr1KT/u4izUT+fOfTQ9+XSIg1idmCZYFFOKjD/lWJQ6Y0sz2RfJpBBkjlesC2r0DzsjyxDlzygn/kUcMrj6IXV05VlsVBANx7DKGKEb4mOpylf8ka2wQK5+eb9fzuqqYU=|0|jainnbr|TNTR-User|20230621092743|18000|"
+
+page_size = 100  # Number of records per page
+start_index = 0  # Starting index for pagination
+
+request_body = {
+    "select": "",
+    "orderBy": None,
+    "where": "(lifetimeFrom >= '2023-04-05T00:00:00.000Z') AND sourceSystemId = 'GlobalFX GBLO'",
+    "maxResults": page_size,
+    "fullRecordVersionHistoryEnabled": True,
+    "asOf": None,
+    "id": None
+}
+
+headers = {
+    "Authorization": f"Bearer {sso_token}",
+    "Content-Type": "application/json"
+}
+
+try:
+    while True:
+        # Modify the start index for each page
+        request_body["start"] = start_index
+
+        response = requests.post(url, json=request_body, headers=headers)
+        response.raise_for_status()  # Raise an exception for any error status code
+
+        # Process the response data
+        data = response.json()
+        # Process the fetched records as per your requirement
+        print(f"Received {len(data)} records for page starting at index {start_index}")
+        print(data)  # Print the fetched records
+
+        if len(data) < page_size:
+            # Break the loop if the received records are less than the page size
+            break
+
+        start_index += page_size
+
+    print("Data fetched successfully!")
+
+except requests.exceptions.RequestException as e:
+    print(f"Error occurred: {e}")

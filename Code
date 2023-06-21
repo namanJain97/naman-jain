@@ -1,0 +1,24 @@
+import requests
+import json
+from urllib.parse import quote
+import pandas as pd
+
+# ... Existing code up to DataFrame creation ...
+
+# User-defined common fields for merging
+common_field_df1_1 = 'field_df1_1'
+common_field_df1_2 = 'field_df1_2'
+common_field_df1_3 = 'field_df1_3'
+common_field_df2_1 = 'field_df2_1'
+common_field_df2_2 = 'field_df2_2'
+common_field_df2_3 = 'field_df2_3'
+
+# Merge the DataFrames based on common field values using an inner join
+merged_df = pd.merge(df1, df2, left_on=[common_field_df1_1, common_field_df1_2, common_field_df1_3], right_on=[common_field_df2_1, common_field_df2_2, common_field_df2_3], how='inner')
+
+# Save the merged DataFrame to a CSV file
+merged_df.to_csv('merged_data.csv', index=False)
+
+# Display the merged DataFrame
+print("Merged DataFrame:")
+print(merged_df)

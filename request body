@@ -1,2 +1,0 @@
-RequestBody = {"select":"","orderBy":null,"where":"(lifetimeFrom >= '2023-04-05T00:00:00.000Z' AND lifetimeFrom <= '2023-04-12T00:00:00.000Z' AND tradeId = 'L230411A13372') AND sourceSystemId = 'GlobalFX GBLO'","maxResults":0,"fullRecordVersionHistoryEnabled":true,"asOf":null,"id":null,"params":null}
-Api = lonrs14597.fm.rbsgrp.net:ignite.ldn.prod-prl.itr2:36124

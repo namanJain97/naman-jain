@@ -99,7 +99,7 @@ where_conditions2 = "subjectIdentifier.regulatoryRegimeIdentifier.regulatoryAuth
 field_names2 = []  # Add the field names you want to extract, or leave it empty for all fields
 
 access_token = "b0013b54-b771-43f7-b2e0-a86b51fd92aa"
-sso_token = "OBO4sgorgOxt0ozarIzA9nf63aU6n5fkhDDUtfW9euQl4r/+syzFBkMCsMK8aAKNlR0Jcw670dYS7H8vTWCpEIgsCIrLsBlzqjUWNKXnmxEP+kjzcZ/cKF/mxi/9G6d2sgVNMWbdezIlKbcG50jKxPT6yFZw+xaTxQfwvQB3x44=|0|jainnbr|TNTR-User|20230621193209|18000|"
+sso_token = "P6xiLksgaxv1QSIY1qI63Q/pjo8KUFZxezWiho1v4hn2p7ONlpKRo1JiG9FH6s8maCNA1Re+GhB3t1PRzlfP6c9o4OWkt6HkAPWGUgmr6Cb1SOPoYxgh8hh3WwwyNIP5HK6LYjsy5drLqUDMAxYsKJgY/LM6iZpdUkR4u1E+3D0=|0|jainnbr|TNTR-User|20230622135308|18000|"
 
 # Make API calls and save data into DataFrames
 data1 = call_api_with_bearer_token(url1, access_token, sso_token, request_body=request_body1)
@@ -108,9 +108,22 @@ df1 = pd.DataFrame(data1)
 data2 = call_api_with_bearer_token(url2, access_token, sso_token, where_conditions=where_conditions2, field_names=field_names2)
 df2 = pd.DataFrame(data2)
 
-# Display the DataFrames
-print("DataFrame 1:")
-print(df1)
+# User-defined common fields for merging
+common_field_df1_1 = 'tradeId'
+common_field_df1_2 = 'recordVersion'
+common_field_df1_3 = 'sourceSystemId'
+common_field_df2_1 = 'transactionId'
+common_field_df2_2 = 'version'
+common_field_df2_3 = 'sourceSystem'
 
-print("DataFrame 2:")
-print(df2)
+# Merge the DataFrames based on common field values using an inner join
+merged_df = df1.merge(df2, how='inner', 
+                      left_on=[common_field_df1_1, common_field_df1_2, common_field_df1_3], 
+                      right_on=[common_field_df2_1, common_field_df2_2, common_field_df2_3])
+
+# Save the merged DataFrame to a CSV file
+merged_df.to_csv('merged_data.csv', index=False)
+
+# Display the merged DataFrame
+print("Merged DataFrame:")
+print(merged_df)

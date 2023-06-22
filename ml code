@@ -1,0 +1,50 @@
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.preprocessing import LabelEncoder
+import pandas as pd
+import matplotlib.pyplot as plt
+print('test')
+data = pd.read_csv('TestdataMerged.csv')
+
+data.fillna(99999, inplace=True)
+
+X = data.drop(['reportableData.lifecycleEvent'], axis=1)  # Exclude the 'lifecycleevent' column from features
+X = X.drop(['tradeId'], axis=1)  
+X = X.drop(['tradeVersion'], axis=1)  
+X = X.drop(['counterpartyLei'], axis=1) 
+X = X.drop(['transactionReportingStatus.reportSubmissionIssues.0.issueCode'], axis=1)
+
+X = X.drop(['eventDateTime'], axis=1)
+X = X.drop(['nonReportableData.processTimeInResponse'], axis=1)
+X = X.drop(['nonReportableData.reportingDelay'], axis=1)
+X = X.drop(['nonReportableData.party2NucId'], axis=1)
+
+y = data['lifecycleEvent']
+
+
+le = LabelEncoder()
+col_list = X.select_dtypes(include = "object").columns
+for colsn in col_list:
+    X[colsn] = le.fit_transform(X[colsn].astype(str))
+    
+# Create a decision tree classifier
+tree = DecisionTreeClassifier()
+
+# Fit the decision tree classifier
+tree.fit(X, y)
+feature_importance = tree.feature_importances_
+feature_names= [f'Feature feature_names{i+1}' for i in range(X.shape[1])]
+
+# Plot the feature importance bar chart
+plt.figure(figsize=(50, 20))
+plt.bar(feature_names, feature_importance)
+plt.xlabel('Features')
+plt.ylabel('Importance')
+plt.title('Feature Importance')
+plt.show()
+
+
+# Print the feature importance and identify categorical variables
+for feature, importance in zip(X.columns, tree.feature_importances_):
+    
+    if importance > 0:
+        print(f"{feature} is a categorical variable.")

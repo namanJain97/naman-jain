@@ -1,1 +1,4 @@
-API error occurred: [Executor error during find command :: caused by :: operation exceeded time limit Caused by: com.mongodb.MongoExecutionTimeoutException: Executor error during find command :: caused by :: operation exceeded time limit]
+File "<ipython-input-1-4c9fb9e93096>", line 93
+    except requests.exceptions.RequestException as e:
+         ^
+SyntaxError: invalid syntax

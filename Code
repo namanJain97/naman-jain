@@ -1,12 +1,1 @@
-# User-defined common fields for merging
-common_field_df1_1 = 'tradeId'
-common_field_df1_2 = 'recordVersion'
-common_field_df1_3 = 'sourceSystemId'
-common_field_df2_1 = 'transactionId'
-common_field_df2_2 = 'version'
-common_field_df2_3 = 'sourceSystem'
-
-# Merge the DataFrames based on common field values using an inner join
-merged_df = pd.merge(df1, df2, how='inner', 
-                     left_on=[common_field_df1_1, common_field_df1_2, common_field_df1_3], 
-                     right_on=[common_field_df2_1, common_field_df2_2, common_field_df2_3])
+UnicodeDecodeError: 'charmap' codec can't decode byte 0x9d in position 16: character maps to <undefined>

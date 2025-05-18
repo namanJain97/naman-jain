@@ -1,0 +1,8 @@
+streamlit==1.38.0
+requests==2.32.3
+gTTS==2.5.3
+supabase==2.8.1
+langchain==0.3.0
+langchain-community==0.3.0
+python-dateutil
+groq

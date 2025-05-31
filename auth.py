@@ -56,6 +56,7 @@ def check_password_strength(password):
         suggestions = ["Consider adding more variety (e.g., special characters, numbers) for a stronger password."]
     else:
         strength = "strong"
+        suggestions = []  # No suggestions needed for a strong password
     
     return strength, suggestions
 
@@ -244,6 +245,8 @@ def handle_authentication(supabase: Client):
                 st.rerun()
 
             menu_options = ["🏠 Home", "✍️ Generate Content", "⭐ Favorites", "ℹ️ About"]
+            if user and user.user_metadata.get('username') == "admin":
+                menu_options.append("🛠️ Admin Dashboard")
             st.session_state.menu = st.selectbox("Navigation", menu_options, index=menu_options.index(st.session_state.menu))
 
     return authentication_status

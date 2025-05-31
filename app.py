@@ -19,6 +19,20 @@ if not SUPABASE_URL or not SUPABASE_KEY:
     st.stop()
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
+# Google Analytics tracking code
+GA_TRACKING_CODE = """
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8ZFSH706H9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8ZFSH706H9');
+</script>
+"""
+st.components.v1.html(GA_TRACKING_CODE, height=0)
+
 # Initialize session state
 if 'menu' not in st.session_state:
     st.session_state.menu = "🏠 Home"
@@ -242,6 +256,13 @@ with st.container():
         st.caption("Version 1.0 | Crafted with ❤️ for creators")
 
         render_feedback_form(supabase, user)
+
+    elif st.session_state.menu == "🛠️ Admin Dashboard":
+        if user and user.user_metadata.get('username') == "admin":
+            from admin import render_admin_dashboard
+            render_admin_dashboard(supabase)
+        else:
+            st.error("Access denied. Admin only.")
 
 # Footer
 st.markdown("<div class='footer'>© 2025 Writeaidaily.com | Developed by Naman Jain 🚀</div>", unsafe_allow_html=True)

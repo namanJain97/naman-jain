@@ -12,13 +12,13 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Groq API setup
-GROQ_API_KEY = "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"
+GROQ_API_KEY = "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"
 if not GROQ_API_KEY:
     st.error("Groq API key not found. Please set GROQ_API_KEY in environment variables.")
     st.stop()
 
 client = Groq(api_key=GROQ_API_KEY)
-MODEL_NAME = "llama-3.3-70b-versatile"  # Updated model
+MODEL_NAME = "llama-3.3-70b-versatile"
 
 # Prompt Template with English as default
 prompt = PromptTemplate(

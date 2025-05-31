@@ -16,7 +16,14 @@ def render_feedback_form(supabase, user):
         feedback = st.text_area("Share your thoughts or suggestions:")
         submitted = st.form_submit_button("Submit")
         if submitted and feedback.strip():
-            user_id = user.id if user else None
-            user_email = user.email if user else None
-            if save_feedback(supabase, user_id, user_email, feedback):
-                st.success("Thank you for your feedback!")
+            if 'feedback_submitted' not in st.session_state:
+                st.session_state.feedback_submitted = False
+            if not st.session_state.feedback_submitted:
+                user_id = user.id if user else None
+                user_email = user.email if user else None
+                if save_feedback(supabase, user_id, user_email, feedback):
+                    st.success("Thank you for your feedback!")
+                    st.session_state.feedback_submitted = True
+            else:
+                st.warning("Feedback already submitted.")
+                

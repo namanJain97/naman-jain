@@ -20,48 +20,58 @@ if not GROQ_API_KEY:
 client = Groq(api_key=GROQ_API_KEY)
 MODEL_NAME = "llama-3.3-70b-versatile"
 
+
 # Prompt Template with English as default
 prompt = PromptTemplate(
-    input_variables=["type", "topic", "tone", "length_description"],
+    input_variables=["type", "tone", "length_description", "context"],
     template="""  
-You are a professional SEO copywriter.  
-
-Write a {type} about "{topic}" in a {tone} tone in English.  
-The length should be {length_description}.  
-
-### Tone-specific instructions:
-- If the tone is "friendly", use warm, approachable language.
-- If the tone is "professional", use formal, polished language.
-- If the tone is "funny", use humor and playful language.
-- If the tone is "urgent", use action-driven language with immediacy.
-- If the tone is "inspirational", use uplifting, motivational language.
-- If the tone is "casual", use relaxed, informal language.
-- If the tone is "sarcastic", use witty, ironic language.
-- If the tone is "formal", use structured, official language.
-- If the tone is "empathetic", use compassionate, understanding language.
-- If the tone is "authoritative", use confident, commanding language.
-
-### Formatting rules:  
-- Use HTML tags (h1, h2, p, ul, li, strong).  
-- Add line breaks and paragraph breaks where needed.  
-- Use bullet points for lists.  
-- Keep the text persuasive, readable, and engaging.  
-
-### Content rules:  
-- For blog posts, include subheadings (h2).  
-- For social media posts, add 2-3 emojis.  
-- For YouTube scripts, structure with an intro, main content, and call-to-action, optimized for video.  
-- For newsletters, format with a header, sections, and footer, suitable for email campaigns.  
-- For LinkedIn posts, use a professional tone with a clear message or insight.  
-- For product descriptions, highlight key features and benefits.  
-- For landing page copy, focus on persuasive headlines and clear calls-to-action.  
-- Ensure content is complete; do not stop mid-sentence or mid-paragraph.  
-- Aim for the specified word count but prioritize completing the last sentence.  
-- If no content can be generated, return a message indicating failure.  
-
-Output only the final copy in English.  
-"""
+        **Assume, you are a professional SEO copywriter.  
+        **Write a {type} about the given context in Engligh.
+        **please rephrase the given text in quotes for you to use it as context for the content to be generated and do not return this in your output; "{context}".
+        **while writing the content make sure to use {tone}.  
+        **The length should be {length_description}.  
+        **Use HTML tags (h1, h2, p, ul, li, strong) and make sure to add line breaks and paragraph breaks whereever needed.  
+        **Use bullet points for lists where ever lists are required otherwise avoid lists.  
+        **Keep the text persuasive, readable, and engaging.  
+        **Ensure content is complete; do not leave incomplete sentences or paragraph and aim for the specified word count.  
+        **If no content can be generated, return a message indicating failure.  
+        **Output only the final version of your content generated on the basis of above given requirements and is ready to be uploaded as {type}. Do not return your assumptions or discussion text.
+        """
 )
+
+
+def get_tone(tone):
+    tones = {"friendly": "friendly, warm and approachable tone in your language",
+                "professional": "formal, polished tone in your language",
+                "funny": "humor and playful tone in your language",
+                "urgent": "action-driven tone in your language with sense of urgency",
+                "inspirational": "uplifting, motivational tone in your language",
+                "casual": "relaxed, informal tone in your language",
+                "sarcastic": "witty, ironic tone in your language",
+                "formal": "structured, official tone in your language",
+                "empathetic": "compassionate, understanding tone in your language",
+                "authoritative": "confident, commanding tone in your language"}
+    return tones[tone]
+
+
+def get_content(type):
+    content_guidelines = {
+                "blog post": "detailed blog post using informative language and include subheadings (H2) to structure the content clearly.",
+                "social media post": "short, engaging social media post using casual language and include 2-3 emojis to enhance expressiveness.",
+                "YouTube script": "YouTube script with a compelling intro, clear main content, and an enthusiastic call-to-action, optimized for video delivery.",
+                "newsletter": "newsletter formatted with a header, well-organized sections, and a footer, suitable for email campaigns. Use friendly yet professional language.",
+                "LinkedIn post": "professional LinkedIn post using insightful language, clear messaging, and a tone suitable for a career-focused audience.",
+                "product description": "description for the product with clear, benefit-driven language highlighting key features and practical advantages.",
+                "landing page copy": "Write persuasive landing page copy focused on attention-grabbing headlines and clear calls-to-action. Keep the tone motivating and goal-oriented."
+                }
+    return content_guidelines[type]
+
+
+def clean_context(context):
+    # This pattern keeps only alphanumeric characters and spaces
+    cleaned_text = re.sub(r'[^a-zA-Z0-9\s]', '', context)
+    return cleaned_text
+
 
 # Mapping content length into word limit instructions
 def get_length_description(length):
@@ -73,6 +83,7 @@ def get_length_description(length):
         return "around 500-600 words"
     else:
         return "around 300-400 words"
+
 
 # Post-process the output to ensure completeness
 def post_process_output(text):
@@ -89,18 +100,22 @@ def post_process_output(text):
         return "<p>No content generated. Please try again with different settings.</p>"
     return text
 
+
 # Function to generate copy using the Groq API
 @st.cache_data(show_spinner=False)
-def _generate_copy_sync(type, topic, tone, length):
+def _generate_copy_sync(type, tone, length, context):
     length_description = get_length_description(length)
+    context = clean_context(context)
     inputs = {
         "type": type,
-        "topic": topic,
+        # "topic": topic,
         "tone": tone,
-        "length_description": length_description
+        "length_description": length_description,
+        "context": context
     }
     try:
-        logger.info(f"Generating content for topic: {topic}, tone: {tone}, length: {length}")
+        # logger.info(f"Generating {type} for topic: {topic}, tone: {tone}, length: {length}")
+        logger.info("Generating your content...")
         prompt_text = prompt.format(**inputs)
         response = client.chat.completions.create(
             model=MODEL_NAME,
@@ -115,16 +130,17 @@ def _generate_copy_sync(type, topic, tone, length):
         logger.error(f"Error generating content: {e}")
         return "<p>Error generating content. Please try again.</p>"
 
+
 # Async wrapper for generate_copy
-def generate_copy(type, topic, tone, length):
+def generate_copy(type, tone, length, context):
     def run_in_thread():
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
-        result = _generate_copy_sync(type, topic, tone, length)
+        result = _generate_copy_sync(type, tone, length, context)
         loop.close()
         return result
 
     thread = threading.Thread(target=run_in_thread)
     thread.start()
     thread.join()
-    return _generate_copy_sync(type, topic, tone, length)
+    return _generate_copy_sync(type, tone, length, context)

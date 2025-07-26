@@ -22,7 +22,7 @@ def render_content_generation(supabase, user):
             "blog post", "social media post", "ad copy", "email", "press release", "YouTube script", "newsletter", 
             "LinkedIn post", "product description", "landing page copy"
         ])
-        topic = st.text_input("Topic")
+        topic = st.text_input("Context")
     with col2:
         tone = st.selectbox("Tone", [
             "friendly", "professional", "funny", "urgent", "inspirational", "casual", "sarcastic", "formal", 

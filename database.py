@@ -83,9 +83,9 @@ def check_usage_limit(supabase: Client, user_id):
     daily_usage = get_daily_usage(supabase, user_id)
     extra_generations = get_extra_generations(supabase, user_id)
     if plan == "pro":
-        limit = 100
+        limit = 30
     else:
-        limit = 5
+        limit = 3
     total_available = limit + extra_generations
     can_generate = daily_usage < total_available
     remaining = max(0, total_available - daily_usage)

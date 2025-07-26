@@ -219,12 +219,12 @@ with st.container():
             plan = get_user_plan(supabase, user.id)
             if plan == "free":
                 st.markdown("""
-                You're on the Free Plan (5 generations/day).  
-                Upgrade to Pro for 100 generations/day and unlock your full creative potential!  
+                You're on the Free Plan (3 generations/day).  
+                Upgrade to Pro for 30 generations/day and unlock your full creative potential!  
                 <a href="?menu=✍️%20Generate%20Content"><button class="upgrade-btn">Upgrade to Pro 🚀</button></a>
                 """, unsafe_allow_html=True)
             else:
-                st.markdown("You're on the Pro Plan! Enjoy 100 generations/day and unleash your creativity! 🎉")
+                st.markdown("You're on the Pro Plan! Enjoy 30 generations/day and unleash your creativity! 🎉")
             st.markdown("Ready to create? Explore our tools or revisit your saved favorites!")
         else:
             st.markdown("Join us to unlock the full power of AI-driven copywriting.")

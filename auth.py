@@ -89,12 +89,12 @@ def reward_referral(supabase: Client, referrer_id, referred_id):
             "referrer_id": referrer_id,
             "referred_id": referred_id
         }).execute()
-        # Grant 5 extra generations to both referrer and referred user
+        # Grant 3 extra generations to both referrer and referred user
         for user_id in [referrer_id, referred_id]:
             response = supabase.table("users").select("extra_generations").eq("id", user_id).execute()
             if response.data:
                 current_extra = response.data[0]["extra_generations"]
-                supabase.table("users").update({"extra_generations": current_extra + 5}).eq("id", user_id).execute()
+                supabase.table("users").update({"extra_generations": current_extra + 3}).eq("id", user_id).execute()
     except Exception as e:
         st.error(f"Failed to reward referral: {str(e)}")
 
@@ -198,7 +198,7 @@ def handle_authentication(supabase: Client):
                                     referrer = get_user_by_referral_code(supabase, referral_code_input)
                                     if referrer:
                                         reward_referral(supabase, referrer['id'], response.user.id)
-                                        st.success("Referral bonus applied! You and your referrer get 5 extra generations.")
+                                        st.success("Referral bonus applied! You and your referrer get 3 extra generations.")
                             else:
                                 st.error("Signup successful, but failed to save user data. Please try logging in.")
                         else:
@@ -236,7 +236,7 @@ def handle_authentication(supabase: Client):
             if response.data:
                 referral_code = response.data[0]["referral_code"]
                 st.write(f"Your Referral Code: **{referral_code}**")
-                st.write("Share this code with friends to earn 5 extra generations!")
+                st.write("Share this code with friends to earn 3 extra generations per day.")
             if st.button("Log Out"):
                 supabase.auth.sign_out()
                 st.session_state.clear()

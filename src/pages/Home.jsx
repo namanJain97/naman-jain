@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <main className="max-w-6xl mx-auto p-6">
       <section className="text-center mt-12">
-        <h1 className="text-4xl font-extrabold">WriteAiDaily Portal</h1>
+        <h1 className="text-4xl font-extrabold">AI Agents Portal</h1>
         <p className="mt-4 text-gray-600">One place for all your AI agents. Login once, use many.</p>
         <div className="mt-8 flex justify-center gap-4">
           <Link to="/agent/writeaidaily" className="px-6 py-3 bg-green-600 text-white rounded-lg">Open WriteAiDaily</Link>

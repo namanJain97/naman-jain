@@ -11,7 +11,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center">
-            <Link to="/" className="text-xl font-bold text-gray-800">WriteAiPortal</Link>
+            <Link to="/" className="text-xl font-bold text-gray-800">AI Agents Portal</Link>
             <nav className="ml-6 space-x-4 hidden md:flex">
               <Link to="/" className="text-gray-600 hover:text-gray-900">Home</Link>
               <Link to="/agents" className="text-gray-600 hover:text-gray-900">Agents</Link>

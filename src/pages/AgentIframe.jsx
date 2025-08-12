@@ -27,7 +27,7 @@ export default function AgentIframe({ agentId }) {
 
   return (
     <div className="h-[80vh] p-4">
-      <iframe title={agentId} src={src} className="w-full h-full border rounded" />
+      <iframe title={agentId} src="https://naman-jain-copywriting-agent.streamlit.app/?embed=true" className="w-full h-full border rounded" />
     </div>
   )
 }

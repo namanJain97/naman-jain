@@ -32,7 +32,7 @@ function AgentsList(){
     <div className="max-w-4xl mx-auto p-6">
       <h2 className="text-2xl font-semibold">Agents</h2>
       <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <a href="/agent/writeaidaily" className="p-4 bg-white rounded shadow">WriteAiDaily</a>
+        <a href="https://naman-jain-copywriting-agent.streamlit.app/?embed=true" className="p-4 bg-white rounded shadow">WriteAiDaily</a>
         <div className="p-4 bg-white rounded shadow">Agent 2 (coming soon)</div>
         <div className="p-4 bg-white rounded shadow">Agent 3 (coming soon)</div>
       </div>

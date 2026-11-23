@@ -89,17 +89,17 @@ func _build_world() -> void:
 				var face := _box(self, Vector3(x,h*0.36,z-d*0.501), Vector3(w*0.55,2.0,0.12), Color(0.18,0.29,0.34))
 	# Roadside trees and streetlights.
 	for i in range(-4,5):
+		var tree_x := float(i)*SPACING + ROAD_W*0.68
 		for z in range(-170,171,42):
-			var x := float(i)*SPACING + ROAD_W*0.68
-			_box(self, Vector3(x,2.0,float(z)), Vector3(0.7,4,0.7), Color(0.31,0.2,0.12))
-		var crown := MeshInstance3D.new()
-		var sphere := SphereMesh.new()
-		sphere.radius = 2.4
-		sphere.height = 4.8
-		crown.mesh = sphere
-		crown.position = Vector3(x,5.0,float(z))
-		crown.material_override = _mat(Color(0.15,0.34,0.19))
-		add_child(crown)
+			_box(self, Vector3(tree_x,2.0,float(z)), Vector3(0.7,4,0.7), Color(0.31,0.2,0.12))
+			var crown := MeshInstance3D.new()
+			var sphere := SphereMesh.new()
+			sphere.radius = 2.4
+			sphere.height = 4.8
+			crown.mesh = sphere
+			crown.position = Vector3(tree_x,5.0,float(z))
+			crown.material_override = _mat(Color(0.15,0.34,0.19))
+			add_child(crown)
 	# landmark: metro station sign
 	_box(self, Vector3(16,3,-44), Vector3(13,5,0.5), Color(0.04,0.32,0.28))
 	var sign := Label3D.new()

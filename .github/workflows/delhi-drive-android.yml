@@ -15,11 +15,23 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Build signed debug APK with Godot 4.4.1
+      - name: Build APK with matching Godot export templates
         run: |
-          mkdir -p delhi-drive/build
-          docker run --rm -v "${{ github.workspace }}:/root/project" barichello/godot-ci:4.4.1 bash -lc 'keytool -genkeypair -v -keystore /root/project/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US" >/dev/null 2>&1 || true; cd /root/project/delhi-drive; mkdir -p build; godot --headless --path . --editor --quit; godot --headless --path . --export-debug "Android" build/DelhiDrive-debug.apk'
-          test -s delhi-drive/build/DelhiDrive-debug.apk
+          docker run --rm -v "${{ github.workspace }}:/root/project" barichello/godot-ci:4.4.1 bash -lc '
+            set -e
+            VERSION="4.4.1.stable"
+            mkdir -p "$HOME/.local/share/godot/export_templates/$VERSION"
+            cd /tmp
+            wget -q https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz -O templates.tpz
+            unzip -q templates.tpz -d templates
+            cp -a templates/templates/. "$HOME/.local/share/godot/export_templates/$VERSION/"
+            cd /root/project/delhi-drive
+            mkdir -p build
+            godot --headless --path . --editor --quit
+            godot --headless --path . --export-debug "Android" build/DelhiDrive-debug.apk
+            test -s build/DelhiDrive-debug.apk
+            file build/DelhiDrive-debug.apk
+          '
       - name: Upload installable APK
         uses: actions/upload-artifact@v4
         with:

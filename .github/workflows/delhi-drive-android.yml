@@ -1,0 +1,29 @@
+name: Build Delhi Drive Android APK
+on:
+  workflow_dispatch:
+  push:
+    branches: [ai-copywriting-agent]
+    paths:
+      - 'delhi-drive/**'
+      - '.github/workflows/delhi-drive-android.yml'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build signed debug APK with Godot 4.4.1
+        run: |
+          mkdir -p delhi-drive/build
+          docker run --rm -v "${{ github.workspace }}:/root/project" barichello/godot-ci:4.4.1 bash -lc 'keytool -genkeypair -v -keystore /root/project/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US" >/dev/null 2>&1 || true; cd /root/project/delhi-drive; mkdir -p build; godot --headless --path . --editor --quit; godot --headless --path . --export-debug "Android" build/DelhiDrive-debug.apk'
+          test -s delhi-drive/build/DelhiDrive-debug.apk
+      - name: Upload installable APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Delhi-Drive-Android-APK
+          path: delhi-drive/build/DelhiDrive-debug.apk
+          if-no-files-found: error
+          retention-days: 30
